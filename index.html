@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f9">
+  <title>Учебный журнал</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a4ed6'/%3E%3Cpath d='M8 8h8c3 0 5 2 5 5v11c-1.5-1-3-1.5-5-1.5H8V8Zm16 0h-3v16c1.1 0 2.1.3 3 1V8Z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="auth-view" class="auth-view">
+    <div class="auth-card">
+      <div class="brand-mark">У</div>
+      <p class="eyebrow">личный трекер обучения</p>
+      <h1>Учебный журнал</h1>
+      <p class="muted">Храни курсы, прогресс и заметки в одном месте.</p>
+      <form id="auth-form">
+        <label>Email<input id="auth-email" type="email" autocomplete="email" required></label>
+        <label>Пароль<input id="auth-password" type="password" autocomplete="current-password" minlength="6" required></label>
+        <button class="primary full" type="submit" id="auth-submit">Войти</button>
+      </form>
+      <button class="link-button" id="auth-toggle">Нет аккаунта? Зарегистрироваться</button>
+      <p class="form-message" id="auth-message" role="alert"></p>
+    </div>
+  </div>
+  <div id="app-view" class="hidden">
+    <header class="topbar">
+      <a class="logo" href="#">Учебный журнал</a>
+      <div class="top-actions"><span class="sync-status" id="sync-status"><i></i>Не подключено</span><span id="user-email"></span><button class="ghost" id="logout">Выйти</button></div>
+    </header>
+    <main class="layout">
+      <section class="content">
+        <div class="page-heading"><div><p class="eyebrow">твой ритм обучения</p><h1 id="page-title">Сейчас</h1></div><div class="heading-actions"><button class="ghost" id="import-button">Импорт</button><button class="ghost" id="export-button">Экспорт</button><button class="primary" id="new-item">+ Добавить</button><input type="file" id="import-file" accept=".json,application/json" hidden></div></div>
+        <nav class="tabs" id="tabs"></nav>
+        <div id="filters" class="filters hidden"><input id="search" type="search" placeholder="Поиск по названию, платформе, теме или уроку"><select id="type-filter"><option value="">Все типы</option><option value="course">Курсы</option><option value="video">Видео</option><option value="article">Статьи</option><option value="book">Книги</option><option value="other">Другое</option></select><select id="platform-filter"><option value="">Все платформы</option></select><select id="category-filter"><option value="">Все темы</option></select></div>
+        <div id="item-list"></div>
+      </section>
+      <aside class="sidebar"><div class="side-card"><h2>Активность</h2><div class="stats"><div><strong id="streak">0</strong><span>дней подряд</span></div><div><strong id="week-lessons">0</strong><span>уроков за 7 дней</span></div><div><strong id="total-lessons">0</strong><span>всего уроков</span></div></div></div><div class="side-card"><h2>Подсказка</h2><p class="muted">Регулярный маленький шаг лучше, чем редкий рывок. Отмечай урок сразу после занятия.</p></div></aside>
+    </main>
+  </div>
+  <div class="modal-backdrop hidden" id="editor-modal"><form class="modal editor-modal" id="editor-form"><div class="modal-head"><h2 id="editor-title">Новая запись</h2><button type="button" class="icon-button" data-close>×</button></div><div class="form-grid"><label class="wide">Название*<input id="item-title" required></label><label>Тип<select id="item-type"><option value="course">Курс</option><option value="video">Видео</option><option value="article">Статья</option><option value="book">Книга</option><option value="other">Другое</option></select></label><label>Платформа<input id="item-platform" list="platforms"><datalist id="platforms"><option>YouTube</option><option>Stepik</option><option>Udemy</option><option>Coursera</option><option>Яндекс Практикум</option><option>Hexlet</option><option>Test-University</option></datalist></label><label class="wide">Ссылка на курс/видео<input id="item-url" type="url"></label><label class="wide">Главная страница заметок в Notion<input id="item-notion" type="url"></label><label>Тема<input id="item-category" list="categories"></label><label>Статус<select id="item-status"><option value="queue">В очереди</option><option value="active">Прохожу</option><option value="paused">На паузе</option><option value="done">Пройдено</option></select></label><label>Приоритет<select id="item-priority"><option value="3">Высокий</option><option value="2">Средний</option><option value="1">Низкий</option></select></label><label>Хочу закончить до<input id="item-deadline" type="date"></label><label class="wide">Комментарий<textarea id="item-notes" rows="3"></textarea></label></div><div class="lessons-head"><div><h3>Уроки <span id="lesson-count"></span></h3><p class="muted small">Для одного видео или статьи уроки не нужны.</p></div><div class="lesson-add"><input id="lesson-amount" type="number" min="1" max="300" value="1"><button type="button" class="ghost" id="add-lessons">Добавить N уроков</button><button type="button" class="ghost" id="add-lesson">+ Урок</button></div></div><div id="lesson-editor"></div><div class="modal-actions"><button type="button" class="danger ghost hidden" id="delete-item">Удалить</button><span></span><button type="button" class="ghost" data-close>Отмена</button><button class="primary" type="submit">Сохранить</button></div></form></div>
+  <div class="modal-backdrop hidden" id="progress-modal"><form class="modal compact-modal" id="progress-form"><div class="modal-head"><h2>Урок пройден</h2><button type="button" class="icon-button" data-close>×</button></div><p id="progress-item-name" class="muted"></p><label>Название урока<input id="progress-title" required></label><label>Ссылка на заметки в Notion<input id="progress-notion" type="url"></label><div class="modal-actions"><span></span><button type="button" class="ghost" data-close>Отмена</button><button class="primary" type="submit">✓ Отметить</button></div></form></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script><script type="module" src="app.js"></script>
+</body>
+</html>
