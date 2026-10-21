@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
-const db = createClient("https://uuidmsmpcnbtkmfbsmwc.supabase.co", "sb_publishable_1vuHGSCVHO12RhvimgZs3w_FF-zTqi7", { auth: { persistSession: true } });
+const db = createClient("https://jbuksmwodcdzcxruuqgx.supabase.co", "sb_publishable_Vr-ls10H7zaw8-CLGVKz7g_wyYyh63z", { auth: { persistSession: true } });
 const $ = id => document.getElementById(id);
 const rememberedTab = (() => { try { return localStorage.getItem("study-tab") || "now"; } catch { return "now"; } })();
 const state = { items: [], tab: rememberedTab, edit: null, progress: null, mode: "login", saves: new Map() };
